@@ -13,11 +13,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DynamicFormComponent } from './forms/dynamic-form/dynamic-form.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StyledInputComponent } from './shared/styled-input/styled-input.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DynamicFormComponent, // Correctly declared
+    DynamicFormComponent,
+    StyledInputComponent, // Correctly declared
   ],
   imports: [
     BrowserModule,

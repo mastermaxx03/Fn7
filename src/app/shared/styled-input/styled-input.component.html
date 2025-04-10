@@ -1,0 +1,19 @@
+<div>
+  <label
+    *ngIf="label"
+    [for]="label"
+    class="block text-sm font-medium text-gray-700"
+  >
+    {{ label }}
+  </label>
+  <input
+    [type]="type"
+    [id]="label"
+    [placeholder]="placeholder"
+    [value]="value"
+    [disabled]="isDisabled"
+    (input)="onInputChange($event)"
+    (blur)="onTouched()"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:opacity-50 disabled:bg-gray-100"
+  />
+</div>
