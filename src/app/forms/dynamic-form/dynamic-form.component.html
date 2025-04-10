@@ -1,29 +1,80 @@
-<h3 class="text-xl font-semibold mb-4">JSON Forms Demo</h3>
+<h3 class="text-xl font-semibold mb-4">Standard Angular Form Demo</h3>
 
-<button
-  (click)="loadForm1()"
-  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2 mb-4"
->
-  Load Form 1
-</button>
-<button
-  (click)="loadForm2()"
-  class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4"
->
-  Load Form 2
-</button>
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="space-y-4">
+  <div>
+    <label for="name" class="block text-sm font-medium text-gray-700"
+      >Full Name <span class="text-red-500">*</span></label
+    >
+    <input
+      type="text"
+      id="name"
+      formControlName="name"
+      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      placeholder="Please enter your full name"
+    />
+    <div
+      *ngIf="
+        myForm.get('name')?.invalid &&
+        (myForm.get('name')?.dirty || myForm.get('name')?.touched)
+      "
+      class="mt-1 text-xs text-red-600"
+    >
+      Name is required.
+    </div>
+  </div>
 
-<div class="border p-4 rounded shadow min-h-[200px]">
-  <jsonforms
-    [schema]="currentSchema"
-    [uischema]="currentUiSchema"
-    [data]="currentData"
-    (dataChange)="onDataChange($event)"
-  >
-  </jsonforms>
-</div>
+  <div>
+    <label for="email" class="block text-sm font-medium text-gray-700"
+      >Email Address <span class="text-red-500">*</span></label
+    >
+    <input
+      type="email"
+      id="email"
+      formControlName="email"
+      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      placeholder="Please enter your email address"
+    />
+    <div
+      *ngIf="
+        myForm.get('email')?.invalid &&
+        (myForm.get('email')?.dirty || myForm.get('email')?.touched)
+      "
+      class="mt-1 text-xs text-red-600"
+    >
+      <span *ngIf="myForm.get('email')?.errors?.['required']"
+        >Email is required.</span
+      >
+      <span *ngIf="myForm.get('email')?.errors?.['email']"
+        >Please enter a valid email.</span
+      >
+    </div>
+  </div>
+
+  <div>
+    <label for="age" class="block text-sm font-medium text-gray-700">Age</label>
+    <input
+      type="number"
+      id="age"
+      formControlName="age"
+      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      placeholder="Please enter your age (optional)"
+    />
+  </div>
+
+  <div>
+    <button
+      type="submit"
+      [disabled]="myForm.invalid"
+      class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      Submit
+    </button>
+  </div>
+</form>
 
 <div class="mt-4 p-2 bg-gray-100 rounded">
   <h4>Current Form Data:</h4>
-  <pre>{{ currentData | json }}</pre>
+  <pre>{{ myForm.value | json }}</pre>
+  <h4 class="mt-2">Form Validity:</h4>
+  <pre>{{ myForm.valid }}</pre>
 </div>
