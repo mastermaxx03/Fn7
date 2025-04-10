@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "bookingDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Select your desired booking date"
+    },
+    "subscribeNewsletter": {
+      "type": "boolean",
+      "description": "Check if you want to receive our newsletter",
+      "default": true
+    },
+    "country": {
+      "type": "string",
+      "enum": ["India", "USA", "UK", "Germany", "Other"],
+      "description": "Select the country"
+    },
+    "feedback": {
+      "type": "string",
+      "description": "Provide any additional comments or feedback"
+    }
+  },
+  "required": ["country", "bookingDate"]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Please enter your full name"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Please enter your email address"
+    },
+    "age": {
+      "type": "integer",
+      "description": "Please enter your age (optional)"
+    }
+  },
+  "required": ["name", "email"]
+}

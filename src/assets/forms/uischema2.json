@@ -1,0 +1,39 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/bookingDate",
+      "label": "Booking Date"
+    },
+    {
+      "type": "HorizontalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/subscribeNewsletter",
+          "label": "Subscribe to Newsletter?"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/country",
+          "label": "Country of Residence"
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "Additional Feedback",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/feedback",
+          "label": "Comments",
+          "options": {
+            "multi": true
+          }
+        }
+      ]
+    }
+  ]
+}
