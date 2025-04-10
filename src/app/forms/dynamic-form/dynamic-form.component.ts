@@ -1,51 +1,88 @@
-// src/app/forms/dynamic-form/dynamic-form.component.ts
-
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 // Import necessary modules for Reactive Forms
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+// --- We no longer need imports for JsonForms schemas or renderers ---
 
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class DynamicFormComponent implements OnInit {
-  // Declare a FormGroup property
-  myForm: FormGroup;
+  // Variable to control which form is displayed
+  currentFormToShow: 'form1' | 'form2' = 'form1';
 
-  // Inject FormBuilder in the constructor
+  // FormGroup definitions for BOTH forms
+  form1: FormGroup;
+  form2: FormGroup;
+
+  // Inject FormBuilder
   constructor(private fb: FormBuilder) {
-    // Initialize the form group here or in ngOnInit
-    this.myForm = this.fb.group({}); // Initialize empty
+    // Initialize empty forms initially
+    this.form1 = this.fb.group({});
+    this.form2 = this.fb.group({});
   }
 
   ngOnInit(): void {
     console.log(
-      'DynamicFormComponent initialized. Setting up standard Angular Form...'
+      'DynamicFormComponent initialized. Setting up standard Angular Forms...'
     );
-    // Define the form structure and validation rules
-    this.myForm = this.fb.group({
-      // formControlName: [initialValue, [validators]]
-      name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      age: [null], // No validator needed if optional, null as initial value for number
-    });
-    console.log('Form setup complete.');
+    this.setupForm1();
+    this.setupForm2();
+    // Ensure Form 1 is shown initially
+    this.currentFormToShow = 'form1';
+    console.log('Forms setup complete.');
   }
 
-  // Method to handle form submission
+  // Method to set up Form 1 structure (based on schema1.json)
+  setupForm1(): void {
+    this.form1 = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      age: [null, [Validators.min(18), Validators.max(100)]],
+    });
+  }
+
+  // Method to set up Form 2 structure (based on schema2.json)
+  setupForm2(): void {
+    this.form2 = this.fb.group({
+      bookingDate: ['', Validators.required],
+      subscribeNewsletter: [true], // Default value true
+      country: ['', Validators.required],
+      feedback: [''],
+    });
+  }
+
+  // --- Methods to switch which form is shown ---
+  loadForm1(): void {
+    console.log('Switching to display Form 1');
+    this.currentFormToShow = 'form1';
+  }
+
+  loadForm2(): void {
+    console.log('Switching to display Form 2');
+    this.currentFormToShow = 'form2';
+  }
+
+  // Method to handle form submission (needs to check which form is active)
   onSubmit(): void {
-    if (this.myForm.valid) {
-      console.log('Form Submitted! Data:', this.myForm.value);
-      // Here you would typically send the data to a service or API
-      // alert('Form Submitted! Check the console.');
+    let activeForm: FormGroup;
+    let formData: any;
+
+    if (this.currentFormToShow === 'form1') {
+      activeForm = this.form1;
     } else {
-      console.log('Form is invalid.');
-      // Mark all fields as touched to display validation errors
-      this.myForm.markAllAsTouched();
+      activeForm = this.form2;
+    }
+
+    if (activeForm.valid) {
+      formData = activeForm.value;
+      console.log(`Form ${this.currentFormToShow} Submitted! Data:`, formData);
+      // alert(`Form ${this.currentFormToShow} Submitted! Check the console.`);
+    } else {
+      console.log(`Form ${this.currentFormToShow} is invalid.`);
+      activeForm.markAllAsTouched(); // Mark fields to show errors
     }
   }
-
-  // All JsonForms specific properties and methods are removed.
 }

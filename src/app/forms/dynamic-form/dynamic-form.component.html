@@ -1,91 +1,199 @@
-<h3 class="text-xl font-semibold mb-4">Standard Angular Form Demo</h3>
+<h3 class="text-xl font-semibold mb-4 text-center dark:text-gray-100">
+  Standard Angular Form Demo (Multiple Layouts)
+</h3>
 
-<form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="space-y-4">
-  <div
-    class="max-w-xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md dark:bg-gray-800"
-  >
-    <label
-      for="name"
-      class="block text-sm font-medium text-gray-700 dark:text-gray-100"
-      >Full Name <span class="text-red-500">*</span></label
-    >
-    <input
-      type="text"
-      id="name"
-      formControlName="name"
-      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-      placeholder="Please enter your full name"
-    />
-    <div
-      *ngIf="
-        myForm.get('name')?.invalid &&
-        (myForm.get('name')?.dirty || myForm.get('name')?.touched)
-      "
-      class="mt-1 text-xs text-red-600"
-    >
-      Name is required.
-    </div>
-  </div>
-
-  <div>
-    <label
-      for="email"
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-      >Email Address <span class="text-red-500">*</span></label
-    >
-    <input
-      type="email"
-      id="email"
-      formControlName="email"
-      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-      placeholder="Please enter your email address"
-    />
-    <div
-      *ngIf="
-        myForm.get('email')?.invalid &&
-        (myForm.get('email')?.dirty || myForm.get('email')?.touched)
-      "
-      class="mt-1 text-xs text-red-600"
-    >
-      <span *ngIf="myForm.get('email')?.errors?.['required']"
-        >Email is required.</span
-      >
-      <span *ngIf="myForm.get('email')?.errors?.['email']"
-        >Please enter a valid email.</span
-      >
-    </div>
-  </div>
-
-  <div>
-    <label
-      for="age"
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-      >Age
-    </label>
-
-    <input
-      type="number"
-      id="age"
-      formControlName="age"
-      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-      placeholder="Please enter your age (optional)"
-    />
-  </div>
-
-  <div>
+<div
+  class="max-w-2xl mx-auto mt-8 p-8 bg-white rounded-lg shadow-md dark:bg-gray-800"
+>
+  <div class="mb-6 text-center">
     <button
-      type="submit"
-      [disabled]="myForm.invalid"
-      class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+      (click)="loadForm1()"
+      class="py-2 px-4 rounded shadow font-medium mr-2"
+      [ngClass]="
+        currentFormToShow === 'form1'
+          ? 'bg-indigo-600 text-white dark:bg-indigo-500'
+          : 'bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-500'
+      "
     >
-      Submit
+      Load Layout 1
+    </button>
+    <button
+      (click)="loadForm2()"
+      class="py-2 px-4 rounded shadow font-medium"
+      [ngClass]="
+        currentFormToShow === 'form2'
+          ? 'bg-indigo-600 text-white dark:bg-indigo-500'
+          : 'bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-500'
+      "
+    >
+      Load Layout 2
     </button>
   </div>
-</form>
 
-<div class="mt-4 p-2 bg-gray-100 rounded">
-  <h4>Current Form Data:</h4>
-  <pre>{{ myForm.value | json }}</pre>
+  <form
+    [formGroup]="form1"
+    (ngSubmit)="onSubmit()"
+    class="space-y-6"
+    *ngIf="currentFormToShow === 'form1'"
+  >
+    <p class="text-sm text-center text-gray-500 dark:text-gray-400 mb-4">
+      Showing Layout 1 (Name, Email, Age - Vertical + Grid)
+    </p>
+
+    <app-styled-input
+      formControlName="name"
+      label="Full Name *"
+      type="text"
+      placeholder="Please enter your full name"
+    ></app-styled-input>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label
+          for="email1"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-100"
+          >Email Address <span class="text-red-500">*</span></label
+        >
+        <input
+          type="email"
+          id="email1"
+          formControlName="email"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+          placeholder="Please enter your email address"
+        />
+        <div
+          *ngIf="
+            form1.get('email')?.invalid &&
+            (form1.get('email')?.dirty || form1.get('email')?.touched)
+          "
+          class="mt-1 text-xs text-red-600 dark:text-red-400"
+        >
+          <span *ngIf="form1.get('email')?.errors?.['required']"
+            >Email is required.</span
+          >
+          <span *ngIf="form1.get('email')?.errors?.['email']"
+            >Please enter a valid email.</span
+          >
+        </div>
+      </div>
+      <div>
+        <label
+          for="age1"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-100"
+          >Age</label
+        >
+        <input
+          type="number"
+          id="age1"
+          formControlName="age"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+          placeholder="Please enter your age (optional)"
+        />
+      </div>
+    </div>
+    <div class="text-right">
+      <button
+        type="submit"
+        [disabled]="form1.invalid"
+        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-indigo-500 dark:hover:bg-indigo-600"
+      >
+        Submit Form 1
+      </button>
+    </div>
+  </form>
+  <form
+    [formGroup]="form2"
+    (ngSubmit)="onSubmit()"
+    class="space-y-6"
+    *ngIf="currentFormToShow === 'form2'"
+  >
+    <p class="text-sm text-center text-gray-500 dark:text-gray-400 mb-4">
+      Showing Layout 2 (Date, Subscribe, Country, Feedback - Different Layout)
+    </p>
+
+    <div>
+      <label
+        for="bookingDate"
+        class="block text-sm font-medium text-gray-700 dark:text-gray-100"
+        >Booking Date <span class="text-red-500">*</span></label
+      >
+      <input
+        type="date"
+        id="bookingDate"
+        formControlName="bookingDate"
+        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+      />
+    </div>
+
+    <div class="flex items-center space-x-6">
+      <div class="flex items-center">
+        <input
+          id="subscribeNewsletter"
+          formControlName="subscribeNewsletter"
+          type="checkbox"
+          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+        />
+        <label
+          for="subscribeNewsletter"
+          class="ml-2 block text-sm text-gray-900 dark:text-gray-100"
+          >Subscribe to Newsletter?</label
+        >
+      </div>
+      <div class="flex-grow">
+        <label
+          for="country"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-100"
+          >Country <span class="text-red-500">*</span></label
+        >
+        <select
+          id="country"
+          formControlName="country"
+          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+        >
+          <option value="" disabled>Select a country</option>
+          <option value="India">India</option>
+          <option value="USA">USA</option>
+          <option value="UK">UK</option>
+          <option value="Germany">Germany</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <label
+        for="feedback"
+        class="block text-sm font-medium text-gray-700 dark:text-gray-100"
+        >Feedback</label
+      >
+      <textarea
+        id="feedback"
+        formControlName="feedback"
+        rows="4"
+        class="mt-1 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+        placeholder="Any comments?"
+      ></textarea>
+    </div>
+
+    <div class="text-right">
+      <button
+        type="submit"
+        [disabled]="form2.invalid"
+        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-indigo-500 dark:hover:bg-indigo-600"
+      >
+        Submit Form 2
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class="mt-4 p-2 bg-gray-100 rounded max-w-2xl mx-auto dark:bg-gray-900">
+  <h4>Current {{ currentFormToShow }} Data:</h4>
+  <pre class="dark:text-gray-300">{{
+    (currentFormToShow === "form1" ? form1 : form2).value | json
+  }}</pre>
   <h4 class="mt-2">Form Validity:</h4>
-  <pre>{{ myForm.valid }}</pre>
+  <pre class="dark:text-gray-300">{{
+    (currentFormToShow === "form1" ? form1 : form2).valid
+  }}</pre>
 </div>
