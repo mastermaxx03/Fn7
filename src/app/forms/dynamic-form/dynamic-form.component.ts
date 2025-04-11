@@ -10,6 +10,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./dynamic-form.component.scss'],
 })
 export class DynamicFormComponent implements OnInit {
+  get currentFormData(): any {
+    return this.currentFormToShow === 'form1'
+      ? this.form1.value
+      : this.form2.value;
+  }
+
+  get currentFormValidity(): boolean {
+    return this.currentFormToShow === 'form1'
+      ? this.form1.valid
+      : this.form2.valid;
+  }
   // Variable to control which form is displayed
   currentFormToShow: 'form1' | 'form2' = 'form1';
 

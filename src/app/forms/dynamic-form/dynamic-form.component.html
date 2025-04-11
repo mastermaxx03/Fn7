@@ -101,6 +101,7 @@
       </button>
     </div>
   </form>
+
   <form
     [formGroup]="form2"
     (ngSubmit)="onSubmit()"
@@ -125,38 +126,47 @@
       />
     </div>
 
-    <div class="flex items-center space-x-6">
-      <div class="flex items-center">
-        <input
-          id="subscribeNewsletter"
-          formControlName="subscribeNewsletter"
-          type="checkbox"
-          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
-        />
-        <label
-          for="subscribeNewsletter"
-          class="ml-2 block text-sm text-gray-900 dark:text-gray-100"
-          >Subscribe to Newsletter?</label
+    <div class="flex items-center">
+      <input
+        id="subscribeNewsletter"
+        formControlName="subscribeNewsletter"
+        type="checkbox"
+        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+      />
+      <label
+        for="subscribeNewsletter"
+        class="ml-2 block text-sm text-gray-900 dark:text-gray-100"
+        >Subscribe to Newsletter?</label
+      >
+    </div>
+    <div class="flex-grow">
+      <label
+        for="country"
+        class="block text-sm font-medium text-gray-700 dark:text-gray-100"
+        >Country <span class="text-red-500">*</span></label
+      >
+      <select
+        id="country"
+        formControlName="country"
+        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+      >
+        <option value="" disabled>Select a country</option>
+        <option value="India">India</option>
+        <option value="USA">USA</option>
+        <option value="UK">UK</option>
+        <option value="Germany">Germany</option>
+        <option value="Other">Other</option>
+      </select>
+      <div
+        *ngIf="
+          form2.get('country')?.invalid &&
+          (form2.get('country')?.dirty || form2.get('country')?.touched)
+        "
+        class="mt-1 text-xs text-red-600 dark:text-red-400"
+      >
+        <span *ngIf="form2.get('country')?.errors?.['required']"
+          >Country is required.</span
         >
-      </div>
-      <div class="flex-grow">
-        <label
-          for="country"
-          class="block text-sm font-medium text-gray-700 dark:text-gray-100"
-          >Country <span class="text-red-500">*</span></label
-        >
-        <select
-          id="country"
-          formControlName="country"
-          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-        >
-          <option value="" disabled>Select a country</option>
-          <option value="India">India</option>
-          <option value="USA">USA</option>
-          <option value="UK">UK</option>
-          <option value="Germany">Germany</option>
-          <option value="Other">Other</option>
-        </select>
       </div>
     </div>
 
@@ -188,12 +198,8 @@
 </div>
 
 <div class="mt-4 p-2 bg-gray-100 rounded max-w-2xl mx-auto dark:bg-gray-900">
-  <h4>Current {{ currentFormToShow }} Data:</h4>
-  <pre class="dark:text-gray-300">{{
-    (currentFormToShow === "form1" ? form1 : form2).value | json
-  }}</pre>
-  <h4 class="mt-2">Form Validity:</h4>
-  <pre class="dark:text-gray-300">{{
-    (currentFormToShow === "form1" ? form1 : form2).valid
-  }}</pre>
+  <h4 class="dark:text-gray-300">Current {{ currentFormToShow }} Data:</h4>
+  <pre class="dark:text-gray-300">{{ currentFormData | json }}</pre>
+  <h4 class="mt-2 dark:text-gray-300">Form Validity:</h4>
+  <pre class="dark:text-gray-300">{{ currentFormValidity }}</pre>
 </div>
