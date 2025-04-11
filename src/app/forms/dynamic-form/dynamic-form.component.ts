@@ -13,7 +13,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   form2: FormGroup;
 
   private countrySubscription: Subscription | null = null;
-  private ageSubscription: Subscription | null = null; // Assuming this is still here from the other example
+  private ageSubscription: Subscription | null = null;
 
   constructor(private fb: FormBuilder) {
     this.form1 = this.fb.group({});
@@ -21,26 +21,26 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(
-      'DynamicFormComponent initialized. Setting up standard Angular Forms...'
-    );
     this.setupForm1();
     this.setupForm2();
     this.currentFormToShow = 'form1';
-    console.log('Forms setup complete.');
   }
 
   ngOnDestroy(): void {
     this.countrySubscription?.unsubscribe();
-    this.ageSubscription?.unsubscribe(); // Assuming this is still here
+    this.ageSubscription?.unsubscribe();
   }
 
   setupForm1(): void {
     this.form1 = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
+      firstName: ['', [Validators.required, Validators.minLength(2)]],
+      lastName: [''],
       email: ['', [Validators.required, Validators.email]],
       confirmAgeCheck: [false],
-      age: [{ value: null, disabled: true }],
+      age: [
+        { value: null, disabled: true },
+        [Validators.required, Validators.min(18), Validators.max(100)],
+      ],
     });
 
     this.ageSubscription?.unsubscribe();
@@ -119,12 +119,10 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   }
 
   loadForm1(): void {
-    console.log('Switching to display Form 1');
     this.currentFormToShow = 'form1';
   }
 
   loadForm2(): void {
-    console.log('Switching to display Form 2');
     this.currentFormToShow = 'form2';
   }
 
