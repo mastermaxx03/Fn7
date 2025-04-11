@@ -15,22 +15,5 @@
     (input)="onInputChange($event)"
     (blur)="onTouched()"
     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:opacity-50 disabled:bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
-    [class.border-red-500]="
-      control?.invalid && (control?.dirty || control?.touched)
-    "
-    [class.dark:border-red-400]="
-      control?.invalid && (control?.dirty || control?.touched)
-    "
   />
-  <div
-    *ngIf="control?.invalid && (control?.dirty || control?.touched)"
-    class="mt-1 text-xs text-red-600 dark:text-red-400"
-  >
-    <span *ngIf="control?.errors?.['required']">This field is required.</span>
-    <span *ngIf="control?.errors?.['email']">Please enter a valid email.</span>
-    <span *ngIf="control?.errors?.['minlength']">
-      Must be at least
-      {{ control?.errors?.['minlength']?.requiredLength }} characters long.
-    </span>
-  </div>
 </div>

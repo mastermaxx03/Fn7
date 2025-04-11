@@ -1,10 +1,5 @@
-import { Component, Input, forwardRef, Injector, OnInit } from '@angular/core';
-import {
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-  NgControl,
-  AbstractControl,
-} from '@angular/forms';
+import { Component, Input, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-styled-input',
@@ -18,11 +13,12 @@ import {
     },
   ],
 })
-export class StyledInputComponent implements ControlValueAccessor, OnInit {
+export class StyledInputComponent implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() type: string = 'text';
   @Input() placeholder: string = '';
   @Input() isRequired: boolean = false;
+  @Input() hasError: boolean = false; // <-- ADD THIS LINE
 
   onChange: any = () => {};
   onTouched: any = () => {};
@@ -30,23 +26,7 @@ export class StyledInputComponent implements ControlValueAccessor, OnInit {
   value: any = '';
   isDisabled: boolean = false;
 
-  control: AbstractControl | null = null;
-
-  constructor(private injector: Injector) {}
-
-  ngOnInit(): void {
-    const ngControl = this.injector.get(NgControl, null);
-    if (ngControl) {
-      this.control = ngControl.control;
-      // --- ADD THIS LINE ---
-      console.log('StyledInputComponent found control:', this.control);
-      // ---------------------
-    } else {
-      console.error(
-        'StyledInputComponent requires being used with formControlName or ngModel'
-      );
-    }
-  }
+  constructor() {}
 
   writeValue(value: any): void {
     this.value = value;
