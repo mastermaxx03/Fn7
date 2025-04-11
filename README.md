@@ -77,13 +77,9 @@ The project instead fulfills the core requirements using **standard Angular Reac
     cd Fn7
     ```
 3.  **Install dependencies:**
-    **(IMPORTANT: Specify ONLY ONE command here - the one that reliably installs dependencies for this project on your machine without errors. Remove the other option!)**
 
     ```bash
-    # Option A: Using NPM with legacy peer dependency flag (Use if this worked reliably last)
-    npm install --legacy-peer-deps
-
-    # Option B: Using Yarn (Use if this worked reliably last)
+    # Using Yarn
     # yarn install
     ```
 
