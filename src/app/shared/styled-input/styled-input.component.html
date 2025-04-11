@@ -4,7 +4,7 @@
     [for]="label"
     class="block text-sm font-medium text-gray-700 dark:text-gray-100"
   >
-    {{ label }}
+    {{ label }} <span *ngIf="isRequired" class="text-red-500">*</span>
   </label>
   <input
     [type]="type"

@@ -42,7 +42,8 @@
 
     <app-styled-input
       formControlName="name"
-      label="Full Name *"
+      label="Full Name"
+      [isRequired]="true"
       type="text"
       placeholder="Please enter your full name"
     ></app-styled-input>
@@ -77,18 +78,51 @@
         </div>
       </div>
       <div>
+        <div class="flex items-center mb-1">
+          <input
+            id="confirmAgeCheck"
+            formControlName="confirmAgeCheck"
+            type="checkbox"
+            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+          />
+          <label
+            for="confirmAgeCheck"
+            class="ml-2 block text-sm text-gray-900 dark:text-gray-100"
+            >I confirm I am 18 or older</label
+          >
+        </div>
         <label
           for="age1"
           class="block text-sm font-medium text-gray-700 dark:text-gray-100"
-          >Age</label
+          >Age
+          <span *ngIf="form1.get('confirmAgeCheck')?.value" class="text-red-500"
+            >*</span
+          ></label
         >
         <input
           type="number"
           id="age1"
           formControlName="age"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-600"
           placeholder="Please enter your age (optional)"
         />
+        <div
+          *ngIf="
+            form1.get('age')?.invalid &&
+            (form1.get('age')?.dirty || form1.get('age')?.touched)
+          "
+          class="mt-1 text-xs text-red-600 dark:text-red-400"
+        >
+          <span *ngIf="form1.get('age')?.errors?.['required']"
+            >Age is required when confirmed.</span
+          >
+          <span *ngIf="form1.get('age')?.errors?.['min']"
+            >Age must be at least 18.</span
+          >
+          <span *ngIf="form1.get('age')?.errors?.['max']"
+            >Age cannot be more than 100.</span
+          >
+        </div>
       </div>
     </div>
     <div class="text-right">
@@ -124,48 +158,93 @@
         formControlName="bookingDate"
         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
       />
-    </div>
-
-    <div class="flex items-center">
-      <input
-        id="subscribeNewsletter"
-        formControlName="subscribeNewsletter"
-        type="checkbox"
-        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
-      />
-      <label
-        for="subscribeNewsletter"
-        class="ml-2 block text-sm text-gray-900 dark:text-gray-100"
-        >Subscribe to Newsletter?</label
-      >
-    </div>
-    <div class="flex-grow">
-      <label
-        for="country"
-        class="block text-sm font-medium text-gray-700 dark:text-gray-100"
-        >Country <span class="text-red-500">*</span></label
-      >
-      <select
-        id="country"
-        formControlName="country"
-        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-      >
-        <option value="" disabled>Select a country</option>
-        <option value="India">India</option>
-        <option value="USA">USA</option>
-        <option value="UK">UK</option>
-        <option value="Germany">Germany</option>
-        <option value="Other">Other</option>
-      </select>
       <div
         *ngIf="
-          form2.get('country')?.invalid &&
-          (form2.get('country')?.dirty || form2.get('country')?.touched)
+          form2.get('bookingDate')?.invalid &&
+          (form2.get('bookingDate')?.dirty || form2.get('bookingDate')?.touched)
         "
         class="mt-1 text-xs text-red-600 dark:text-red-400"
       >
-        <span *ngIf="form2.get('country')?.errors?.['required']"
-          >Country is required.</span
+        <span *ngIf="form2.get('bookingDate')?.errors?.['required']"
+          >Booking date is required.</span
+        >
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-6">
+      <div class="flex items-center">
+        <input
+          id="subscribeNewsletter"
+          formControlName="subscribeNewsletter"
+          type="checkbox"
+          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+        />
+        <label
+          for="subscribeNewsletter"
+          class="ml-2 block text-sm text-gray-900 dark:text-gray-100"
+          >Subscribe to Newsletter?</label
+        >
+      </div>
+      <div class="flex-grow">
+        <label
+          for="country"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-100"
+          >Country <span class="text-red-500">*</span></label
+        >
+        <select
+          id="country"
+          formControlName="country"
+          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+        >
+          <option value="" disabled>Select a country</option>
+          <option value="India">India</option>
+          <option value="USA">USA</option>
+          <option value="UK">UK</option>
+          <option value="Germany">Germany</option>
+          <option value="Other">Other</option>
+        </select>
+        <div
+          *ngIf="
+            form2.get('country')?.invalid &&
+            (form2.get('country')?.dirty || form2.get('country')?.touched)
+          "
+          class="mt-1 text-xs text-red-600 dark:text-red-400"
+        >
+          <span *ngIf="form2.get('country')?.errors?.['required']"
+            >Country is required.</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label
+        for="otherCountry"
+        class="block text-sm font-medium text-gray-700 dark:text-gray-100"
+        >Specify Other Country
+        <span
+          *ngIf="form2.get('country')?.value === 'Other'"
+          class="text-red-500"
+          >*</span
+        ></label
+      >
+      <input
+        type="text"
+        id="otherCountry"
+        formControlName="otherCountry"
+        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:opacity-50 disabled:bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 dark:disabled:bg-gray-600"
+        placeholder="Please specify if country is Other"
+      />
+      <div
+        *ngIf="
+          form2.get('otherCountry')?.invalid &&
+          (form2.get('otherCountry')?.dirty ||
+            form2.get('otherCountry')?.touched)
+        "
+        class="mt-1 text-xs text-red-600 dark:text-red-400"
+      >
+        <span *ngIf="form2.get('otherCountry')?.errors?.['required']"
+          >Specification is required when country is Other.</span
         >
       </div>
     </div>

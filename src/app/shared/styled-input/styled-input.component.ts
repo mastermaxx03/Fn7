@@ -22,6 +22,7 @@ export class StyledInputComponent implements ControlValueAccessor, OnInit {
   @Input() label: string = '';
   @Input() type: string = 'text';
   @Input() placeholder: string = '';
+  @Input() isRequired: boolean = false;
 
   onChange: any = () => {};
   onTouched: any = () => {};

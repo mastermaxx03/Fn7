@@ -1,36 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-// Import necessary modules for Reactive Forms
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-// --- We no longer need imports for JsonForms schemas or renderers ---
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.scss'],
 })
-export class DynamicFormComponent implements OnInit {
-  get currentFormData(): any {
-    return this.currentFormToShow === 'form1'
-      ? this.form1.value
-      : this.form2.value;
-  }
-
-  get currentFormValidity(): boolean {
-    return this.currentFormToShow === 'form1'
-      ? this.form1.valid
-      : this.form2.valid;
-  }
-  // Variable to control which form is displayed
+export class DynamicFormComponent implements OnInit, OnDestroy {
   currentFormToShow: 'form1' | 'form2' = 'form1';
-
-  // FormGroup definitions for BOTH forms
   form1: FormGroup;
   form2: FormGroup;
 
-  // Inject FormBuilder
+  private countrySubscription: Subscription | null = null;
+  private ageSubscription: Subscription | null = null; // Assuming this is still here from the other example
+
   constructor(private fb: FormBuilder) {
-    // Initialize empty forms initially
     this.form1 = this.fb.group({});
     this.form2 = this.fb.group({});
   }
@@ -41,31 +26,98 @@ export class DynamicFormComponent implements OnInit {
     );
     this.setupForm1();
     this.setupForm2();
-    // Ensure Form 1 is shown initially
     this.currentFormToShow = 'form1';
     console.log('Forms setup complete.');
   }
 
-  // Method to set up Form 1 structure (based on schema1.json)
+  ngOnDestroy(): void {
+    this.countrySubscription?.unsubscribe();
+    this.ageSubscription?.unsubscribe(); // Assuming this is still here
+  }
+
   setupForm1(): void {
     this.form1 = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      age: [null, [Validators.min(18), Validators.max(100)]],
+      confirmAgeCheck: [false],
+      age: [{ value: null, disabled: true }],
     });
+
+    this.ageSubscription?.unsubscribe();
+    const confirmAgeControl = this.form1.get('confirmAgeCheck');
+    const ageControl = this.form1.get('age');
+    if (confirmAgeControl && ageControl) {
+      if (!confirmAgeControl.value) {
+        ageControl.disable();
+        ageControl.clearValidators();
+      } else {
+        ageControl.enable();
+        ageControl.setValidators([
+          Validators.required,
+          Validators.min(18),
+          Validators.max(100),
+        ]);
+      }
+      ageControl.updateValueAndValidity();
+      this.ageSubscription = confirmAgeControl.valueChanges.subscribe(
+        (isChecked) => {
+          if (isChecked) {
+            ageControl.enable();
+            ageControl.setValidators([
+              Validators.required,
+              Validators.min(18),
+              Validators.max(100),
+            ]);
+          } else {
+            ageControl.disable();
+            ageControl.clearValidators();
+            ageControl.reset(null);
+          }
+          ageControl.updateValueAndValidity();
+        }
+      );
+    }
   }
 
-  // Method to set up Form 2 structure (based on schema2.json)
   setupForm2(): void {
     this.form2 = this.fb.group({
       bookingDate: ['', Validators.required],
-      subscribeNewsletter: [true], // Default value true
+      subscribeNewsletter: [true],
       country: ['', Validators.required],
       feedback: [''],
+      otherCountry: [{ value: '', disabled: true }],
     });
+
+    this.countrySubscription?.unsubscribe();
+    const countryControl = this.form2.get('country');
+    const otherCountryControl = this.form2.get('otherCountry');
+
+    if (countryControl && otherCountryControl) {
+      if (countryControl.value !== 'Other') {
+        otherCountryControl.disable();
+        otherCountryControl.clearValidators();
+      } else {
+        otherCountryControl.enable();
+        otherCountryControl.setValidators(Validators.required);
+      }
+      otherCountryControl.updateValueAndValidity();
+
+      this.countrySubscription = countryControl.valueChanges.subscribe(
+        (countryValue) => {
+          if (countryValue === 'Other') {
+            otherCountryControl.enable();
+            otherCountryControl.setValidators(Validators.required);
+          } else {
+            otherCountryControl.disable();
+            otherCountryControl.clearValidators();
+            otherCountryControl.reset('');
+          }
+          otherCountryControl.updateValueAndValidity();
+        }
+      );
+    }
   }
 
-  // --- Methods to switch which form is shown ---
   loadForm1(): void {
     console.log('Switching to display Form 1');
     this.currentFormToShow = 'form1';
@@ -76,24 +128,32 @@ export class DynamicFormComponent implements OnInit {
     this.currentFormToShow = 'form2';
   }
 
-  // Method to handle form submission (needs to check which form is active)
   onSubmit(): void {
     let activeForm: FormGroup;
     let formData: any;
-
     if (this.currentFormToShow === 'form1') {
       activeForm = this.form1;
     } else {
       activeForm = this.form2;
     }
-
     if (activeForm.valid) {
       formData = activeForm.value;
       console.log(`Form ${this.currentFormToShow} Submitted! Data:`, formData);
-      // alert(`Form ${this.currentFormToShow} Submitted! Check the console.`);
     } else {
       console.log(`Form ${this.currentFormToShow} is invalid.`);
-      activeForm.markAllAsTouched(); // Mark fields to show errors
+      activeForm.markAllAsTouched();
     }
+  }
+
+  get currentFormData(): any {
+    return this.currentFormToShow === 'form1'
+      ? this.form1.value
+      : this.form2.value;
+  }
+
+  get currentFormValidity(): boolean {
+    return this.currentFormToShow === 'form1'
+      ? this.form1.valid
+      : this.form2.valid;
   }
 }
