@@ -82,7 +82,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   setupForm2(): void {
     this.form2 = this.fb.group({
       bookingDate: ['', Validators.required],
-      subscribeNewsletter: [true],
+      subscribeNewsletter: [false],
       country: ['', Validators.required],
       feedback: [''],
       otherCountry: [{ value: '', disabled: true }],
@@ -153,5 +153,33 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     return this.currentFormToShow === 'form1'
       ? this.form1.valid
       : this.form2.valid;
+  }
+  onClearForm(): void {
+    console.log(`Clearing Form ${this.currentFormToShow}`);
+    if (this.currentFormToShow === 'form1') {
+      this.form1.reset({
+        firstName: '',
+        lastName: '',
+        email: '',
+        confirmAgeCheck: false,
+        age: null,
+      });
+
+      this.form1.get('age')?.disable();
+
+      this.form1.get('age')?.updateValueAndValidity();
+    } else {
+      this.form2.reset({
+        bookingDate: '',
+        subscribeNewsletter: false,
+        country: '',
+        feedback: '',
+        otherCountry: '',
+      });
+
+      this.form2.get('otherCountry')?.disable();
+      this.form2.get('otherCountry')?.clearValidators();
+      this.form2.get('otherCountry')?.updateValueAndValidity();
+    }
   }
 }
